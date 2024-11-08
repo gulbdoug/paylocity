@@ -1,4 +1,7 @@
-﻿namespace Api.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Riok.Mapperly.Abstractions;
+
+namespace Api.Models;
 
 public class Dependent
 {
@@ -7,6 +10,10 @@ public class Dependent
     public string? LastName { get; set; }
     public DateTime DateOfBirth { get; set; }
     public Relationship Relationship { get; set; }
+
+    [MapperIgnore]
     public int EmployeeId { get; set; }
+
+    [MapperIgnore]
     public Employee? Employee { get; set; }
 }

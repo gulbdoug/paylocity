@@ -1,6 +1,8 @@
 ﻿using Api.Dtos.Dependent;
 using Api.Dtos.Employee;
 using Api.Models;
+using Api.Models.Mapperly;
+using Api.Services.EmployeeSrv;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -10,90 +12,65 @@ namespace Api.Controllers;
 [Route("api/v1/[controller]")]
 public class EmployeesController : ControllerBase
 {
+    private readonly IEmployeeService _employeeService;
+
+    public EmployeesController(IEmployeeService employeeService)
+    {
+        _employeeService = employeeService;
+    }
+
     [SwaggerOperation(Summary = "Get employee by id")]
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<GetEmployeeDto>>> Get(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var employee = await _employeeService.GetEmployeeById(id);
+            var result = new ApiResponse<GetEmployeeDto>
+            {
+                Data = employee,
+                Success = true
+            };
+            return result;
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResponse<List<GetEmployeeDto>>
+            {
+                Success = false,
+                Message = "Error getting employee by id",
+                Error = ex.Message
+            });
+        }
     }
 
     [SwaggerOperation(Summary = "Get all employees")]
     [HttpGet("")]
     public async Task<ActionResult<ApiResponse<List<GetEmployeeDto>>>> GetAll()
     {
-        //task: use a more realistic production approach
-        var employees = new List<GetEmployeeDto>
+        try
         {
-            new()
+            //task: use a more realistic production approach - DG: changed to use EntityFramework to simulate a database
+            var employees = await _employeeService.GetAllEmployees();
+            var result = new ApiResponse<List<GetEmployeeDto>>
             {
-                Id = 1,
-                FirstName = "LeBron",
-                LastName = "James",
-                Salary = 75420.99m,
-                DateOfBirth = new DateTime(1984, 12, 30)
-            },
-            new()
-            {
-                Id = 2,
-                FirstName = "Ja",
-                LastName = "Morant",
-                Salary = 92365.22m,
-                DateOfBirth = new DateTime(1999, 8, 10),
-                Dependents = new List<GetDependentDto>
-                {
-                    new()
-                    {
-                        Id = 1,
-                        FirstName = "Spouse",
-                        LastName = "Morant",
-                        Relationship = Relationship.Spouse,
-                        DateOfBirth = new DateTime(1998, 3, 3)
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        FirstName = "Child1",
-                        LastName = "Morant",
-                        Relationship = Relationship.Child,
-                        DateOfBirth = new DateTime(2020, 6, 23)
-                    },
-                    new()
-                    {
-                        Id = 3,
-                        FirstName = "Child2",
-                        LastName = "Morant",
-                        Relationship = Relationship.Child,
-                        DateOfBirth = new DateTime(2021, 5, 18)
-                    }
-                }
-            },
-            new()
-            {
-                Id = 3,
-                FirstName = "Michael",
-                LastName = "Jordan",
-                Salary = 143211.12m,
-                DateOfBirth = new DateTime(1963, 2, 17),
-                Dependents = new List<GetDependentDto>
-                {
-                    new()
-                    {
-                        Id = 4,
-                        FirstName = "DP",
-                        LastName = "Jordan",
-                        Relationship = Relationship.DomesticPartner,
-                        DateOfBirth = new DateTime(1974, 1, 2)
-                    }
-                }
-            }
-        };
-
-        var result = new ApiResponse<List<GetEmployeeDto>>
+                Data = employees,
+                Success = true
+            };
+            return result;
+        }
+        catch (Exception ex)
         {
-            Data = employees,
-            Success = true
-        };
-
-        return result;
+            return BadRequest(new ApiResponse<List<GetEmployeeDto>>
+            {
+                Success = false,
+                Message = "Error getting all employees",
+                Error = ex.Message
+            });
+        }
     }
 }
