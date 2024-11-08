@@ -55,6 +55,7 @@ public class EmployeesController : ControllerBase
         try
         {
             //task: use a more realistic production approach - DG: changed to use EntityFramework to simulate a database
+            // was going to try sqllite, but got a strange error and decided to just use the in-memory database
             var employees = await _employeeService.GetAllEmployees();
             var result = new ApiResponse<List<GetEmployeeDto>>
             {

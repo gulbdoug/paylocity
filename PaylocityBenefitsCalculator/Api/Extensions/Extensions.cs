@@ -6,7 +6,7 @@ namespace Api.Extensions
         {
             var today = DateTime.Today;
             var age = today.Year - sender.Year;
-            // this adjusts if today is before the date of birth
+            // this adjusts age if today is before the date of birth this year
             if (sender.Date > today.AddYears(-age)) age--;
             return age;
         }

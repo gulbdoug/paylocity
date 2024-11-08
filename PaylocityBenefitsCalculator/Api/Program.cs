@@ -15,6 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // DG: normally would use a SQL server or other database to store data
     options.UseInMemoryDatabase(databaseName: builder.Configuration.GetConnectionString("InMemoryDb") ?? "PaylocityInMemoryDb");
+    // Had strange error trying to use sqllite, but left here to show what it looked like, using a migration to seed the database
     // options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
     //     option =>
     //     {
@@ -23,12 +24,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // );
 });
 
+// Add services to the container.
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IDependentRepository, DependentRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IDependentService, DependentService>();
 builder.Services.AddScoped<IPaycheckService, PaycheckService>();
-// Add services to the container.
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

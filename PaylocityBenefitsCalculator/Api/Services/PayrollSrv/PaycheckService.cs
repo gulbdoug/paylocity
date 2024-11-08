@@ -15,6 +15,7 @@ namespace Api.Services.PayrollSrv
 {
     public class PaycheckService : IPaycheckService
     {
+        // Constants - hardcoded for now, but probably should be moved to a database or config file so it can be change easier and used in multiple places
         const decimal MonthsPerYear = 12.0m;
         const decimal PaychecksPerYear = 26.0m;
         const decimal EmployeeCostBasis = 1000.0m;
@@ -63,7 +64,7 @@ namespace Api.Services.PayrollSrv
                 Date = DateOnly.FromDateTime(DateTime.Today),
                 GrossPay = paycheckGrossSalary,
                 Deductions = deductions,
-                NetPay = paycheckNetSalary, //ConvertToMonthlyToPaychecksPerYearValue(paycheckNetSalary),
+                NetPay = paycheckNetSalary,
             };
         }
 
@@ -78,17 +79,12 @@ namespace Api.Services.PayrollSrv
             return Math.Round(salary / PaychecksPerYear, 2);
         }
 
-        // private decimal CalculateMonthlyGrossPay(decimal salary)
-        // {
-        //     return salary / MonthsPerYear;
-        // }
-
         private Deduction CreateEmployeeBaseCostDeduction(decimal salary)
         {
             return new Deduction
             {
                 Name = "Employee Base Cost",
-                Amount = ConvertToMonthlyToPaychecksPerYearValue(EmployeeCostBasis), // EmployeeCostBasis * MonthsPerYear / PaychecksPerYear,
+                Amount = ConvertToMonthlyToPaychecksPerYearValue(EmployeeCostBasis),
             };
         }
 
@@ -97,7 +93,7 @@ namespace Api.Services.PayrollSrv
             return new Deduction
             {
                 Name = "Dependent Base Cost",
-                Amount = ConvertToMonthlyToPaychecksPerYearValue(DependentAdditionalCost * dependentCount) // * MonthsPerYear / PaychecksPerYear
+                Amount = ConvertToMonthlyToPaychecksPerYearValue(DependentAdditionalCost * dependentCount)
             };
         }
 
