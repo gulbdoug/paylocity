@@ -75,13 +75,13 @@ namespace Api.Services.PayrollSrv
 
         public decimal CalculatePaycheckGrossPay(decimal salary)
         {
-            return salary / PaychecksPerYear;
+            return Math.Round(salary / PaychecksPerYear, 2);
         }
 
-        private decimal CalculateMonthlyGrossPay(decimal salary)
-        {
-            return salary / MonthsPerYear;
-        }
+        // private decimal CalculateMonthlyGrossPay(decimal salary)
+        // {
+        //     return salary / MonthsPerYear;
+        // }
 
         private Deduction CreateEmployeeBaseCostDeduction(decimal salary)
         {
@@ -105,7 +105,7 @@ namespace Api.Services.PayrollSrv
         {
             return new Deduction
             {
-                Name = "Higher Employee Additional Cost",
+                Name = "Higher Salary Employee Additional Cost",
                 Amount = (salary > HigherEmployeeMinSalary) ? Math.Round(salary * HigherEmployeeAdditionalPercentage / PaychecksPerYear, 2) : 0,
             };
         }
