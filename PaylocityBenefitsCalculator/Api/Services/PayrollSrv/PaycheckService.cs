@@ -100,7 +100,7 @@ namespace Api.Services.PayrollSrv
         /// </summary>
         /// <param name="salary"></param>
         /// <returns></returns>
-        public decimal CalculatePaycheckGrossPay(decimal salary)
+        private decimal CalculatePaycheckGrossPay(decimal salary)
         {
             return Math.Round(salary / PaychecksPerYear, 2);
         }

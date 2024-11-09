@@ -66,56 +66,5 @@ namespace ApiTests
             Assert.Equal("Higher Dependent Age Cost", result.Deductions[3].Name);
             Assert.Equal(92.31m, result.Deductions[3].Amount);
         }
-
-        [Fact]
-        public void CalculatePaycheckGrossPay_RoundToTwoDecimalPlaces()
-        {
-            var service = new PaycheckService(_employeeRepositoryMock.Object);
-            var grossSalary = service.CalculatePaycheckGrossPay(1000);
-
-            Assert.Equal(38.46m, grossSalary);
-        }
-
-        // [Fact]
-        // public void CalculateMonthlyGrossPay_RoundToTwoDecimalPlaces()
-        // {
-        //     var service = new PaycheckService(_employeeRepositoryMock.Object);
-        //     var grossSalary = service.CalculateMonthlyGrossPay(1000);
-
-        //     Assert.Equal(83.33m, grossSalary);
-        // }
-
-        // [Fact]
-        // public void CreateEmployeeBaseCostDeduction_RoundToTwoDecimalPlaces()
-        // {
-        //     var service = new PaycheckService(new EmployeeRepository(new ApplicationDbContext()));
-        //     var deduction = service.CreateEmployeeBaseCostDeduction(1000);
-
-        //     Assert.Equal(38.46m, deduction.Amount);
-        // }
-
-        // [Fact]
-        // public void CalculateDependentBaseCost_RoundToTwoDecimalPlaces()
-        // {
-        //     var service = new PaycheckService(new EmployeeRepository(new ApplicationDbContext()));
-        //     var deduction = service.CalculateDependentBaseCost(2);
-
-        //     Assert.Equal(76.92m, deduction.Amount);
-        // }
-
-        // [Fact]
-        // public void CalculatePaycheckNetSalary_RoundToTwoDecimalPlaces()
-        // {
-        //     var service = new PaycheckService(new EmployeeRepository(new ApplicationDbContext()));
-        //     var paycheckSalary = 1000;
-        //     var deductions = new List<Deduction>
-        //         {
-        //             new Deduction {Amount = 100},
-        //             new Deduction {Amount = 50}
-        //         };
-        //     var netSalary = service.CalculatePaycheckNetSalary(paycheckSalary, deductions);
-
-        //     Assert.Equal(850.00m, netSalary);
-        // }
     }
 }
