@@ -14,6 +14,8 @@ namespace Api.Controllers
     /// <summary>
     /// The Payroll Controller is used to calculate employee paychecks, but can be used in the future to process any other items related to paying employees
     /// It uses the PaycheckService, but other services can be added in the future to handle other payroll items 
+    /// Also, as I got going I realized that there are various types of paychecks, so this controller would need to be updated to handle other types
+    /// such as hourly, commission, contractor, or maybe some custom pay types specific to a company
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
