@@ -64,6 +64,13 @@ namespace Api.Services.PayrollSrv
             return Math.Round(value * MonthsPerYear / PaychecksPerYear, 2);
         }
 
+        /// <summary>
+        /// Create the paycheck object that will be returned
+        /// </summary>
+        /// <param name="paycheckGrossSalary"></param>
+        /// <param name="paycheckNetSalary"></param>
+        /// <param name="deductions"></param>
+        /// <returns></returns>
         private SalaryPaycheck CreateEmployeeSalaryPaycheck(decimal paycheckGrossSalary, decimal paycheckNetSalary, List<Deduction> deductions)
         {
             return new SalaryPaycheck
@@ -75,17 +82,35 @@ namespace Api.Services.PayrollSrv
             };
         }
 
+        /// <summary>
+        /// Calculate the paycheck net salary - gross pay minus all deductions
+        /// </summary>
+        /// <param name="paycheckSalary"></param>
+        /// <param name="deductions"></param>
+        /// <returns></returns>
         private decimal CalculatePaycheckNetSalary(decimal paycheckSalary, List<Deduction> deductions)
         {
             var totalDeductions = deductions.Sum(d => d.Amount);
             return paycheckSalary - totalDeductions;
         }
 
+
+        /// <summary>
+        /// Gross pay broken down by paycheck (26 per year)
+        /// </summary>
+        /// <param name="salary"></param>
+        /// <returns></returns>
         public decimal CalculatePaycheckGrossPay(decimal salary)
         {
             return Math.Round(salary / PaychecksPerYear, 2);
         }
 
+        /// <summary>
+        /// Base Cost Deduction - get yearly value, divide by number of paychecks
+        /// This assumes employee was employeed for the entire year
+        /// </summary>
+        /// <param name="salary"></param>
+        /// <returns></returns>
         private Deduction CreateEmployeeBaseCostDeduction(decimal salary)
         {
             return new Deduction
@@ -95,6 +120,12 @@ namespace Api.Services.PayrollSrv
             };
         }
 
+        /// <summary>
+        /// Dependent Base Cost - get yearly value, divide by number of paychecks
+        /// This assumes the dependent were associated with the employee for the entire year (no new dependents during the year)
+        /// </summary>
+        /// <param name="dependentCount"></param>
+        /// <returns></returns>
         private Deduction CalculateDependentBaseCost(int dependentCount)
         {
             return new Deduction
@@ -104,6 +135,12 @@ namespace Api.Services.PayrollSrv
             };
         }
 
+        /// <summary>
+        /// Higher Salary Employee Additional Cost - get yearly value, divide by number of paychecks
+        /// This assumes the salary didn't go over the $80,000 threshold during the year
+        /// </summary>
+        /// <param name="salary"></param>
+        /// <returns></returns>
         private Deduction CalculateHigherSalaryEmployeeAdditionalCost(decimal salary)
         {
             return new Deduction
@@ -113,6 +150,14 @@ namespace Api.Services.PayrollSrv
             };
         }
 
+        /// <summary>
+        /// Higher Dependent Age Cost - get yearly value, divide by number of paychecks
+        /// This checks if the dependent is currently over the age threshold (50)
+        /// But this assumed the dependent turned 50 at the beginning of the year, caclulating all months of the year
+        /// Should be changed to check if the dependent turned 50 during the year and only calculate for the months the dependent was over 50
+        /// </summary>
+        /// <param name="dependents"></param>
+        /// <returns></returns>
         private Deduction CalculateHigherDependentAgeCost(ICollection<Dependent> dependents)
         {
 
