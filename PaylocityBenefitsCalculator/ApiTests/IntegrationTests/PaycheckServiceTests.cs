@@ -15,14 +15,11 @@ namespace ApiTests
     public class PaycheckServiceTests : IntegrationTest
     {
         private Mock<IEmployeeRepository> _employeeRepositoryMock;
-        //  private Mock<IApplicationDbContext> _applicationDbContextMock;
         private IPaycheckService _paycheckService;
 
         public PaycheckServiceTests()
         {
             _employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            // _applicationDbContextMock = new Mock<IApplicationDbContext>();
-
             _paycheckService = new PaycheckService(_employeeRepositoryMock.Object);
         }
 

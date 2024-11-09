@@ -33,6 +33,13 @@ namespace Api.Services.PayrollSrv
             _employeeRepository = employeeRepository;
         }
 
+        /// <summary>
+        /// This is the main method that calculates the paycheck for an employee
+        /// Currently it is only calculating a salary type paycheck, but could be expanded to include other types (Hourly, Commision, Contractor, etc)
+        /// 
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
         public async Task<SalaryPaycheckDto> CalculatePaycheck(int employeeId)
         {
             var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId);

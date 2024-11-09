@@ -47,21 +47,6 @@ namespace Api.Services.DependentSrv
 
         public async Task<UpdateDependentDto> UpdateDependentAsync(UpdateDependentDto dependentDto)
         {
-            // // only need to check if we are a spouse or domestic partner - if this relationship was changed
-            // if (dependentDto.Relationship == Relationship.Spouse || dependentDto.Relationship == Relationship.DomesticPartner)
-            // {
-            //     // check if there are other spouses or domestic partners 
-            //     // make sure we compare dependent ids - so we don't have same one and say it is invalid
-            //     var employee = await _employeeService.GetEmployeeById(dependentDto.EmployeeId);
-            //     var hasSpouseOrPartner = employee.Dependents
-            //     .Count(d => d.Relationship == Relationship.Spouse || d.Relationship == Relationship.DomesticPartner && d.Id != dependentDto.Id) == 1;
-
-            //     if (hasSpouseOrPartner)
-            //     {
-            //         throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
-            //     }
-            // }
-
             await CheckForSpouseOrPartnerAsync(dependentDto.EmployeeId, dependentDto.Id, dependentDto.Relationship);
 
             var dependent = Mapper.Map.UpdateDependentDtoToDependent(dependentDto);
@@ -70,6 +55,15 @@ namespace Api.Services.DependentSrv
             return dependentDto;
         }
 
+
+        /// <summary>
+        /// Validate that there is only one spouse or domestic partner - Future - create tests for this to check for new and existing dependent update
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="dependentId"></param>
+        /// <param name="relationship"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         private async Task CheckForSpouseOrPartnerAsync(int employeeId, int? dependentId, Relationship relationship)
         {
             // only need to check if we are a spouse or domestic partner - if this relationship was changed

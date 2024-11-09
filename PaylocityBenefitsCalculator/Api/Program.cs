@@ -17,13 +17,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // DG: normally would use a SQL server or other database to store data
     options.UseInMemoryDatabase(databaseName: builder.Configuration.GetConnectionString("InMemoryDb") ?? "PaylocityInMemoryDb");
-    // Had strange error trying to use sqllite, but left here to show what it looked like, using a migration to seed the database
-    // options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"),
-    //     option =>
-    //     {
-    //         option.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-    //     }
-    // );
 });
 
 // Add services to the container.
