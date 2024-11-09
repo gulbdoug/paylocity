@@ -22,26 +22,25 @@ namespace Api.Models.Mapperly
         // Get
         public partial GetEmployeeDto EmployeeToGetEmployeeDto(Employee employee);
 
+        [MapperIgnoreSource(nameof(Dependent.EmployeeId))]
         public partial GetDependentDto DependentToGetDependentDto(Dependent dependent);
 
         // GEt - reverse
+        [MapperIgnoreTarget(nameof(Dependent.EmployeeId))]
         public partial Dependent GetDependentDtoToDependant(GetDependentDto dependentDto);
 
         public partial Employee GetEmployeeDtoToEmployee(GetEmployeeDto employeeDto);
 
 
         // Post
-        public partial Employee CreateEmployeeDtoToEmployee(CreateEmployeeDto employeeDto);
-
+        [MapperIgnoreTarget(nameof(Dependent.Id))]
         public partial Dependent CreateDependentDtoToDependent(CreateDependentDto dependentDto);
 
         // Put
         public partial Dependent UpdateDependentDtoToDependent(UpdateDependentDto dependentDto);
 
-        // Payroll - Paycheck
-        public partial PaycheckDto PaycheckToGetEmployeePaycheckDto(Paycheck paycheck);
-
-        // public partial Paycheck GetDependentPaycheckDtoToPaycheck(GetEmployeePaycheckDto dependent);
+        // Payroll - Salary Paycheck
+        public partial SalaryPaycheckDto PaycheckToGetEmployeePaycheckDto(SalaryPaycheck paycheck);
 
     }
 }

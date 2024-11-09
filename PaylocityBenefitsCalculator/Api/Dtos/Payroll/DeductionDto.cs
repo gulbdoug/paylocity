@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Api.Dtos.Payroll
 {
-    public class DeductionDto
+    public class DeductionDto : IDeductionDto
     {
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public decimal Amount { get; set; } = 0;
-
     }
 }

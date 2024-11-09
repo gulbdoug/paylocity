@@ -10,7 +10,5 @@ namespace Api.Services.EmployeeSrv
     {
         Task<List<GetEmployeeDto>> GetAllEmployees();
         Task<GetEmployeeDto> GetEmployeeById(int id);
-        Task<GetEmployeeDto> InsertEmployee(CreateEmployeeDto employeeDto);
-        void UpdateEmployee(int id, CreateEmployeeDto employeeDto);
     }
 }

@@ -11,7 +11,5 @@ namespace Api.Data
     {
         DbSet<Employee> Employees { get; set; }
         DbSet<Dependent> Dependents { get; set; }
-
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

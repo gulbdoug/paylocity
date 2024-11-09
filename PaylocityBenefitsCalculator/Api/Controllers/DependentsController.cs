@@ -72,6 +72,11 @@ public class DependentsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Added Insert/Update methods to validate the check for one spouse or domestic partner
+    /// </summary>
+    /// <param name="dependentDto"></param>
+    /// <returns></returns>
     [SwaggerOperation(Summary = "Insert dependent")]
     [HttpPost]
     public async Task<ActionResult<ApiResponse<GetDependentDto>>> AddDependent(CreateDependentDto dependentDto)
@@ -95,18 +100,26 @@ public class DependentsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Added Insert/Update methods to validate the check for one spouse or domestic partner
+    /// </summary>
+    /// <param name="dependentDto"></param>
+    /// <returns></returns>
     [SwaggerOperation(Summary = "Update dependent")]
     [HttpPut]
-    public ActionResult<ApiResponse<GetDependentDto>> UpdateDependent(UpdateDependentDto dependentDto)
+    public async Task<ActionResult<ApiResponse<UpdateDependentDto>>> UpdateDependent(UpdateDependentDto dependentDto)
     {
         try
         {
-            _dependentService.UpdateDependent(dependentDto);
-            return Ok();
+            await _dependentService.UpdateDependentAsync(dependentDto);
+            return new ApiResponse<UpdateDependentDto>
+            {
+                Data = dependentDto
+            };
         }
         catch (Exception ex)
         {
-            return BadRequest(new ApiResponse<List<GetDependentDto>>
+            return BadRequest(new ApiResponse<List<UpdateDependentDto>>
             {
                 Success = false,
                 Message = "Error updating dependent",

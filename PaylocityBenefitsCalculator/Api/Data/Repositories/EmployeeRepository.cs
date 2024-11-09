@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Repositories
 {
+    /// <summary>
+    /// Repository for Employee CRUD operations - only need Get for now, add others in future
+    /// </summary>
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly ApplicationDbContext _context;
@@ -34,37 +37,37 @@ namespace Api.Data.Repositories
 
         }
 
-        public async Task<Employee> AddEmployeeAsync(Employee employee)
-        {
-            if (employee == null)
-            {
-                throw new ArgumentNullException(nameof(employee));
-            }
+        // public async Task<Employee> AddEmployeeAsync(Employee employee)
+        // {
+        //     if (employee == null)
+        //     {
+        //         throw new ArgumentNullException(nameof(employee));
+        //     }
 
-            await _context.Employees.AddAsync(employee);
-            var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
+        //     await _context.Employees.AddAsync(employee);
+        //     var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            if (resultCount == 0)
-            {
-                throw new InvalidOperationException("Failed to add employee");
-            }
+        //     if (resultCount == 0)
+        //     {
+        //         throw new InvalidOperationException("Failed to add employee");
+        //     }
 
-            return employee;
-        }
+        //     return employee;
+        // }
 
-        public async void UpdateEmployeeAsync(Employee employee)
-        {
-            if (employee == null)
-            {
-                throw new ArgumentNullException(nameof(employee));
-            }
-            _context.Employees.Update(employee);
-            var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
+        // public async void UpdateEmployeeAsync(Employee employee)
+        // {
+        //     if (employee == null)
+        //     {
+        //         throw new ArgumentNullException(nameof(employee));
+        //     }
+        //     _context.Employees.Update(employee);
+        //     var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            if (resultCount == 0)
-            {
-                throw new InvalidOperationException("Failed to update employee");
-            }
-        }
+        //     if (resultCount == 0)
+        //     {
+        //         throw new InvalidOperationException("Failed to update employee");
+        //     }
+        // }
     }
 }

@@ -28,10 +28,10 @@ namespace Api.Controllers
 
         [SwaggerOperation(Summary = "Get Paycheck by employee id")]
         [HttpGet("paycheck/{id}")]
-        public async Task<ActionResult<ApiResponse<PaycheckDto>>> Get(int id)
+        public async Task<ActionResult<ApiResponse<SalaryPaycheckDto>>> Get(int id)
         {
             var employeePaycheck = await _paycheckService.CalculatePaycheck(id);
-            var result = new ApiResponse<PaycheckDto>
+            var result = new ApiResponse<SalaryPaycheckDto>
             {
                 Data = employeePaycheck,
                 Success = true

@@ -33,7 +33,7 @@ namespace Api.Services.PayrollSrv
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<PaycheckDto> CalculatePaycheck(int employeeId)
+        public async Task<SalaryPaycheckDto> CalculatePaycheck(int employeeId)
         {
             var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId);
             var paycheckGrossSalary = CalculatePaycheckGrossPay(employee.Salary);
@@ -57,9 +57,9 @@ namespace Api.Services.PayrollSrv
             return Math.Round(value * MonthsPerYear / PaychecksPerYear, 2);
         }
 
-        private Paycheck CreateEmployeeSalaryPaycheck(decimal paycheckGrossSalary, decimal paycheckNetSalary, List<Deduction> deductions)
+        private SalaryPaycheck CreateEmployeeSalaryPaycheck(decimal paycheckGrossSalary, decimal paycheckNetSalary, List<Deduction> deductions)
         {
-            return new Paycheck
+            return new SalaryPaycheck
             {
                 Date = DateOnly.FromDateTime(DateTime.Today),
                 GrossPay = paycheckGrossSalary,

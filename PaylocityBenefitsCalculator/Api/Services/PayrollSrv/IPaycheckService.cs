@@ -8,6 +8,6 @@ namespace Api.Services.PayrollSrv
 {
     public interface IPaycheckService
     {
-        Task<PaycheckDto> CalculatePaycheck(int employeeId);
+        Task<SalaryPaycheckDto> CalculatePaycheck(int employeeId);
     }
 }

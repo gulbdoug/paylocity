@@ -10,7 +10,5 @@ namespace Api.Data.Repositories
     {
         Task<List<Employee>> GetAllEmployeesAsync();
         Task<Employee> GetEmployeeByIdAsync(int id);
-        Task<Employee> AddEmployeeAsync(Employee employee);
-        void UpdateEmployeeAsync(Employee employee);
     }
 }

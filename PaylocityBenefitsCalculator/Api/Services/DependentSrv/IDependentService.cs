@@ -11,6 +11,6 @@ namespace Api.Services.DependentSrv
         Task<List<GetDependentDto>> GetAllDependents();
         Task<GetDependentDto> GetDependentById(int id);
         Task<GetDependentDto> InsertDependentAsync(CreateDependentDto dependentDto);
-        void UpdateDependent(UpdateDependentDto dependentDto);
+        Task<UpdateDependentDto> UpdateDependentAsync(UpdateDependentDto dependentDto);
     }
 }

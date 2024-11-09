@@ -33,30 +33,6 @@ namespace Api.Services.EmployeeSrv
             return Mapper.Map.EmployeeToGetEmployeeDto(employee);
         }
 
-        public async Task<GetEmployeeDto> InsertEmployee(CreateEmployeeDto employeeDto)
-        {
-
-            var employee = Mapper.Map.CreateEmployeeDtoToEmployee(employeeDto);
-
-            // if (!_validator.IsValid(employee))
-            // {
-            //     throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
-            // }
-
-            var createdEmployee = await _employeeRepository.AddEmployeeAsync(employee);
-            return Mapper.Map.EmployeeToGetEmployeeDto(createdEmployee);
-        }
-
-        public void UpdateEmployee(int id, CreateEmployeeDto employeeDto)
-        {
-            var employee = Mapper.Map.CreateEmployeeDtoToEmployee(employeeDto);
-            // if (!_validator.IsValid(employee))
-            // {
-            //     throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
-            // }
-            _employeeRepository.UpdateEmployeeAsync(employee);
-        }
-
-        // Future - add delete
+        // Future - add Insert, Update, Delete
     }
 }

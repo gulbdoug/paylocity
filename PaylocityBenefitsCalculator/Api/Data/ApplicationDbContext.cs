@@ -8,23 +8,14 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Dependent> Dependents { get; set; }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
-
-    public static void SeedData(ApplicationDbContext context)
-    {
-        context.Database.Migrate();
-    }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     /// <summary>
-    /// Seed the inmemory data
+    /// Seed the inMemory data - This is only for testing, not production
     /// </summary>
     /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // if (!Database.IsInMemory() && !Database.GetMigrations().Any())
-        // {
         modelBuilder.Entity<Employee>().HasData(
         new Employee
         {
@@ -90,11 +81,5 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 EmployeeId = 3
             }
         );
-        //}
     }
-
-    // public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    // {
-    //     return await base.SaveChangesAsync(cancellationToken);
-    // }
 }

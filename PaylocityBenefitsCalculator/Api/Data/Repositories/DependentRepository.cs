@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data.Repositories
 {
+    /// <summary>
+    /// Repository for Dependents CRUD operations 
+    /// </summary>
     public class DependentRepository : IDependentRepository
     {
         private readonly ApplicationDbContext _context;
@@ -82,5 +85,7 @@ namespace Api.Data.Repositories
                 throw new InvalidOperationException("Failed to update Dependent");
             }
         }
+
+        // Add Delete method in future
     }
 }
