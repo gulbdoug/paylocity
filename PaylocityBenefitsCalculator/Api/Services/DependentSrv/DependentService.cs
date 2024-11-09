@@ -4,16 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Data.Repositories;
 using Api.Dtos.Dependent;
+using Api.Dtos.Employee;
+using Api.Models;
 using Api.Models.Mapperly;
+using Api.Services.EmployeeSrv;
 
 namespace Api.Services.DependentSrv
 {
     public class DependentService : IDependentService
     {
         private readonly IDependentRepository _dependentRepository;
-        public DependentService(IDependentRepository dependentRepository)
+        private readonly IEmployeeService _employeeService;
+        private readonly IValidator<GetEmployeeDto> _validator;
+
+        public DependentService(IDependentRepository dependentRepository, IEmployeeService employeeService, IValidator<GetEmployeeDto> validator)
         {
             _dependentRepository = dependentRepository;
+            _employeeService = employeeService;
+            _validator = validator;
         }
         public async Task<List<GetDependentDto>> GetAllDependents()
         {
@@ -27,5 +35,55 @@ namespace Api.Services.DependentSrv
             var dependent = await _dependentRepository.GetDependentAsync(id);
             return Mapper.Map.DependentToGetDependentDto(dependent);
         }
+
+        public async Task<GetDependentDto> InsertDependentAsync(CreateDependentDto dependentDto)
+        {
+            // only need to check if we are adding a spouse or domestic partner
+            if (dependentDto.Relationship == Relationship.Spouse || dependentDto.Relationship == Relationship.DomesticPartner)
+            {
+                // check if there are other spouses or domestic partners
+                var employee = await _employeeService.GetEmployeeById(dependentDto.EmployeeId);
+                var hasSpouseOrPartner = employee.Dependents
+                .Count(d => d.Relationship == Relationship.Spouse || d.Relationship == Relationship.DomesticPartner) == 1;
+
+                if (hasSpouseOrPartner)
+                {
+                    throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
+                }
+            }
+
+            // var employee = await _employeeService.GetEmployeeById(dependentDto.EmployeeId);
+
+            // if (!_validator.IsValid(employee))
+            // {
+            //     throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
+            // }
+
+            var dependent = Mapper.Map.CreateDependentDtoToDependent(dependentDto);
+            var createdDependent = await _dependentRepository.AddDependentAsync(dependent);
+            return Mapper.Map.DependentToGetDependentDto(createdDependent);
+        }
+
+        public async void UpdateDependent(UpdateDependentDto dependentDto)
+        {
+            // only need to check if we are a spouse or domestic partner - if this relationship was changed
+            if (dependentDto.Relationship == Relationship.Spouse || dependentDto.Relationship == Relationship.DomesticPartner)
+            {
+                // check if there are other spouses or domestic partners 
+                // make sure we compare dependent ids - so we don't have same one and say it is invalid
+                var employee = await _employeeService.GetEmployeeById(dependentDto.EmployeeId);
+                var hasSpouseOrPartner = employee.Dependents
+                .Count(d => d.Relationship == Relationship.Spouse || d.Relationship == Relationship.DomesticPartner && d.Id != dependentDto.Id) == 1;
+
+                if (hasSpouseOrPartner)
+                {
+                    throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
+                }
+            }
+
+            var dependent = Mapper.Map.UpdateDependentDtoToDependent(dependentDto);
+            _dependentRepository.UpdateDependentAsync(dependent);
+        }
+
     }
 }

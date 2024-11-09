@@ -12,10 +12,12 @@ namespace Api.Services.EmployeeSrv
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        // private readonly IValidator<Employee> _validator;
 
         public EmployeeService(IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
+            // _validator = validator;
         }
 
         public async Task<List<GetEmployeeDto>> GetAllEmployees()
@@ -31,40 +33,28 @@ namespace Api.Services.EmployeeSrv
             return Mapper.Map.EmployeeToGetEmployeeDto(employee);
         }
 
-        public bool ValidateOnlyOnePartner(Employee employee)
-        {
-            if (employee.Dependents == null)
-            {
-                return true;
-            }
-
-            return employee.Dependents
-                .Count(d => d.Relationship == Relationship.Spouse || d.Relationship == Relationship.DomesticPartner) == 1;
-        }
-
-        public async Task<GetEmployeeDto> CreateEmployee(CreateEmployeeDto employeeDto)
+        public async Task<GetEmployeeDto> InsertEmployee(CreateEmployeeDto employeeDto)
         {
 
             var employee = Mapper.Map.CreateEmployeeDtoToEmployee(employeeDto);
 
-            if (!ValidateOnlyOnePartner(employee))
-            {
-                throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
-            }
+            // if (!_validator.IsValid(employee))
+            // {
+            //     throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
+            // }
 
             var createdEmployee = await _employeeRepository.AddEmployeeAsync(employee);
             return Mapper.Map.EmployeeToGetEmployeeDto(createdEmployee);
         }
 
-        public async Task<GetEmployeeDto> UpdateEmployee(int id, CreateEmployeeDto employeeDto)
+        public void UpdateEmployee(int id, CreateEmployeeDto employeeDto)
         {
             var employee = Mapper.Map.CreateEmployeeDtoToEmployee(employeeDto);
-            if (!ValidateOnlyOnePartner(employee))
-            {
-                throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
-            }
-            var updatedEmployee = await _employeeRepository.AddEmployeeAsync(employee);
-            return Mapper.Map.EmployeeToGetEmployeeDto(updatedEmployee);
+            // if (!_validator.IsValid(employee))
+            // {
+            //     throw new InvalidOperationException("Only one spouse or domestic partner is allowed");
+            // }
+            _employeeRepository.UpdateEmployeeAsync(employee);
         }
 
         // Future - add delete

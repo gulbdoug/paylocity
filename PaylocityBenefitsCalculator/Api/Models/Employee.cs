@@ -1,4 +1,6 @@
-﻿namespace Api.Models;
+﻿using Riok.Mapperly.Abstractions;
+
+namespace Api.Models;
 
 public class Employee
 {

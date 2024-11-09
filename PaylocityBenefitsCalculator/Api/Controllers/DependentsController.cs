@@ -71,4 +71,48 @@ public class DependentsController : ControllerBase
             });
         }
     }
+
+    [SwaggerOperation(Summary = "Insert dependent")]
+    [HttpPost]
+    public async Task<ActionResult<ApiResponse<GetDependentDto>>> AddDependent(CreateDependentDto dependentDto)
+    {
+        try
+        {
+            var dependent = await _dependentService.InsertDependentAsync(dependentDto);
+            return new ApiResponse<GetDependentDto>
+            {
+                Data = dependent
+            };
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResponse<List<GetDependentDto>>
+            {
+                Success = false,
+                Message = "Error inserting dependent",
+                Error = ex.Message
+            });
+        }
+    }
+
+    [SwaggerOperation(Summary = "Update dependent")]
+    [HttpPut]
+    public ActionResult<ApiResponse<GetDependentDto>> UpdateDependent(UpdateDependentDto dependentDto)
+    {
+        try
+        {
+            _dependentService.UpdateDependent(dependentDto);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResponse<List<GetDependentDto>>
+            {
+                Success = false,
+                Message = "Error updating dependent",
+                Error = ex.Message
+            });
+
+        }
+    }
 }

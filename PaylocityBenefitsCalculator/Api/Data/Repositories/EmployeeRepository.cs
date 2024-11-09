@@ -51,5 +51,20 @@ namespace Api.Data.Repositories
 
             return employee;
         }
+
+        public async void UpdateEmployeeAsync(Employee employee)
+        {
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(employee));
+            }
+            _context.Employees.Update(employee);
+            var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            if (resultCount == 0)
+            {
+                throw new InvalidOperationException("Failed to update employee");
+            }
+        }
     }
 }

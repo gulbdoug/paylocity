@@ -29,15 +29,14 @@ namespace Api.Models.Mapperly
 
         public partial Employee GetEmployeeDtoToEmployee(GetEmployeeDto employeeDto);
 
+
         // Post
-        public partial CreateEmployeeDto EmployeeToCreateEmployeeDto(Employee employee);
-
-        public partial CreateDependentDto DependentToCreateDependentDto(Dependent dependent);
-
-        // Post - reverse
         public partial Employee CreateEmployeeDtoToEmployee(CreateEmployeeDto employeeDto);
 
         public partial Dependent CreateDependentDtoToDependent(CreateDependentDto dependentDto);
+
+        // Put
+        public partial Dependent UpdateDependentDtoToDependent(UpdateDependentDto dependentDto);
 
         // Payroll - Paycheck
         public partial PaycheckDto PaycheckToGetEmployeePaycheckDto(Paycheck paycheck);

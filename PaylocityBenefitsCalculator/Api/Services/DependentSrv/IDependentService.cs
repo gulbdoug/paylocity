@@ -8,7 +8,9 @@ namespace Api.Services.DependentSrv
 {
     public interface IDependentService
     {
-        public Task<List<GetDependentDto>> GetAllDependents();
-        public Task<GetDependentDto> GetDependentById(int id);
+        Task<List<GetDependentDto>> GetAllDependents();
+        Task<GetDependentDto> GetDependentById(int id);
+        Task<GetDependentDto> InsertDependentAsync(CreateDependentDto dependentDto);
+        void UpdateDependent(UpdateDependentDto dependentDto);
     }
 }

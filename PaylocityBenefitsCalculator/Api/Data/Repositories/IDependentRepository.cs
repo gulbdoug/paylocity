@@ -8,9 +8,12 @@ namespace Api.Data.Repositories
 {
     public interface IDependentRepository
     {
-        public Task<List<Dependent>> GetAllAsync();
-        public Task<Dependent> GetDependentAsync(int id);
-        public Task<List<Dependent>> GetEmployeeDependentsAsync(int employeeId);
-        public Task<Dependent> GetDependentsAsync(int employeeId, int dependentId);
+        Task<List<Dependent>> GetAllAsync();
+        Task<Dependent> GetDependentAsync(int id);
+        Task<List<Dependent>> GetEmployeeDependentsAsync(int employeeId);
+        Task<Dependent> GetDependentsAsync(int employeeId, int dependentId);
+
+        Task<Dependent> AddDependentAsync(Dependent employee);
+        void UpdateDependentAsync(Dependent employee);
     }
 }

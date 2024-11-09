@@ -49,5 +49,38 @@ namespace Api.Data.Repositories
 
             return dependent;
         }
+
+        public async Task<Dependent> AddDependentAsync(Dependent dependent)
+        {
+            if (dependent == null)
+            {
+                throw new ArgumentNullException(nameof(dependent));
+            }
+
+            await _context.Dependents.AddAsync(dependent);
+            var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            if (resultCount == 0)
+            {
+                throw new InvalidOperationException("Failed to add employee");
+            }
+
+            return dependent;
+        }
+
+        public async void UpdateDependentAsync(Dependent dependent)
+        {
+            if (dependent == null)
+            {
+                throw new ArgumentNullException(nameof(dependent));
+            }
+            _context.Dependents.Update(dependent);
+            var resultCount = await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            if (resultCount == 0)
+            {
+                throw new InvalidOperationException("Failed to update Dependent");
+            }
+        }
     }
 }
