@@ -36,7 +36,7 @@ namespace Api.Services.PayrollSrv
         /// <summary>
         /// This is the main method that calculates the paycheck for an employee
         /// Currently it is only calculating a salary type paycheck, but could be expanded to include other types (Hourly, Commision, Contractor, etc)
-        /// 
+        /// All other methods are private helper methods that is assumed is only needed for this method/class
         /// </summary>
         /// <param name="employeeId"></param>
         /// <returns></returns>
@@ -59,6 +59,11 @@ namespace Api.Services.PayrollSrv
             return Mapper.Map.PaycheckToGetEmployeePaycheckDto(paycheck);
         }
 
+        /// <summary>
+        /// Converts a monthly value to the number of paychecks per year
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private decimal ConvertToMonthlyToPaychecksPerYearValue(decimal value)
         {
             return Math.Round(value * MonthsPerYear / PaychecksPerYear, 2);
