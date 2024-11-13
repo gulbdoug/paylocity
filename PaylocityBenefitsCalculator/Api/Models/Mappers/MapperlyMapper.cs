@@ -40,7 +40,7 @@ namespace Api.Models.Mapperly
         public partial Dependent UpdateDependentDtoToDependent(UpdateDependentDto dependentDto);
 
         // Payroll - Salary Paycheck
-        public partial SalaryPaycheckDto PaycheckToGetEmployeePaycheckDto(SalaryPaycheck paycheck);
+        public partial SalaryPaycheckDto PaycheckToGetEmployeePaycheckDto(ISalaryPaycheck paycheck);
 
     }
 }

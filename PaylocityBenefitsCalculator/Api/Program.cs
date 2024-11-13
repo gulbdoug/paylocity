@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Api.Models;
 using Api.Dtos.Employee;
+using Api.Models.Payroll;
 
 AppContext.SetSwitch("Microsoft.Data.Sqlite.UseManagedRetrieval", true);
 
@@ -26,6 +27,8 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IDependentService, DependentService>();
 builder.Services.AddScoped<IPaycheckService, PaycheckService>();
 builder.Services.AddScoped<IValidator<GetEmployeeDto>, EmployeeValidator>();
+builder.Services.AddScoped<IDeductionFactory, DeductionFactory>();
+builder.Services.AddScoped<ISalaryFactory, SalaryFactory>();
 
 
 builder.Services.AddControllers();

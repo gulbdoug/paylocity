@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Api.Models.Payroll
 {
-    public class Deduction : IDeduction
+    public interface IDeduction
     {
-        public required string Name { get; set; }
-        public decimal Amount { get; set; } = 0;
+        string Name { get; set; }
+        decimal Amount { get; set; }
     }
 }

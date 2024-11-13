@@ -15,12 +15,17 @@ namespace ApiTests
     public class PaycheckServiceTests : IntegrationTest
     {
         private Mock<IEmployeeRepository> _employeeRepositoryMock;
+        private ISalaryFactory _salaryFactoryMock;
         private IPaycheckService _paycheckService;
+
+        private IDeductionFactory _deductionFactoryMock;
 
         public PaycheckServiceTests()
         {
             _employeeRepositoryMock = new Mock<IEmployeeRepository>();
-            _paycheckService = new PaycheckService(_employeeRepositoryMock.Object);
+            _salaryFactoryMock = new SalaryFactory();
+            _deductionFactoryMock = new DeductionFactory();
+            _paycheckService = new PaycheckService(_employeeRepositoryMock.Object, _salaryFactoryMock, _deductionFactoryMock);
         }
 
         [Fact]

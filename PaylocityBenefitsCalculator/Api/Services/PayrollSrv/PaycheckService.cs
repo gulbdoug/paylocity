@@ -27,10 +27,14 @@ namespace Api.Services.PayrollSrv
         const decimal HigherDependentCost = 200.0m;
 
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly ISalaryFactory _salaryFactory;
+        private readonly IDeductionFactory _deductionFactory;
 
-        public PaycheckService(IEmployeeRepository employeeRepository)
+        public PaycheckService(IEmployeeRepository employeeRepository, ISalaryFactory salaryFactory, IDeductionFactory deductionFactory)
         {
             _employeeRepository = employeeRepository;
+            _salaryFactory = salaryFactory;
+            _deductionFactory = deductionFactory;
         }
 
         /// <summary>
@@ -44,7 +48,7 @@ namespace Api.Services.PayrollSrv
         {
             var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId);
             var paycheckGrossSalary = CalculatePaycheckGrossPay(employee.Salary);
-            List<Deduction> deductions =
+            List<IDeduction> deductions =
             [
                 CreateEmployeeBaseCostDeduction(employee.Salary),
                 CalculateDependentBaseCost(employee.Dependents.Count),
@@ -76,15 +80,16 @@ namespace Api.Services.PayrollSrv
         /// <param name="paycheckNetSalary"></param>
         /// <param name="deductions"></param>
         /// <returns></returns>
-        private SalaryPaycheck CreateEmployeeSalaryPaycheck(decimal paycheckGrossSalary, decimal paycheckNetSalary, List<Deduction> deductions)
+        private ISalaryPaycheck CreateEmployeeSalaryPaycheck(decimal paycheckGrossSalary, decimal paycheckNetSalary, List<IDeduction> deductions)
         {
-            return new SalaryPaycheck
-            {
-                Date = DateOnly.FromDateTime(DateTime.Today),
-                GrossPay = paycheckGrossSalary,
-                Deductions = deductions,
-                NetPay = paycheckNetSalary,
-            };
+            return _salaryFactory.CreateSalaryPaycheck(paycheckGrossSalary, paycheckNetSalary, deductions);
+            // return new SalaryPaycheck
+            // {
+            //     Date = DateOnly.FromDateTime(DateTime.Today),
+            //     GrossPay = paycheckGrossSalary,
+            //     Deductions = deductions,
+            //     NetPay = paycheckNetSalary,
+            // };
         }
 
         /// <summary>
@@ -93,8 +98,12 @@ namespace Api.Services.PayrollSrv
         /// <param name="paycheckSalary"></param>
         /// <param name="deductions"></param>
         /// <returns></returns>
-        private decimal CalculatePaycheckNetSalary(decimal paycheckSalary, List<Deduction> deductions)
+        private decimal CalculatePaycheckNetSalary(decimal paycheckSalary, List<IDeduction> deductions)
         {
+            if (deductions == null || deductions.Count == 0)
+            {
+                return paycheckSalary;
+            }
             var totalDeductions = deductions.Sum(d => d.Amount);
             return paycheckSalary - totalDeductions;
         }
@@ -116,13 +125,15 @@ namespace Api.Services.PayrollSrv
         /// </summary>
         /// <param name="salary"></param>
         /// <returns></returns>
-        private Deduction CreateEmployeeBaseCostDeduction(decimal salary)
+        private IDeduction CreateEmployeeBaseCostDeduction(decimal salary)
         {
-            return new Deduction
-            {
-                Name = "Employee Base Cost",
-                Amount = ConvertToMonthlyToPaychecksPerYearValue(EmployeeCostBasis),
-            };
+            var amount = ConvertToMonthlyToPaychecksPerYearValue(EmployeeCostBasis);
+            return _deductionFactory.CreateDeduction("Employee Base Cost", amount);
+            // return new Deduction
+            // {
+            //     Name = "Employee Base Cost",
+            //     Amount = ConvertToMonthlyToPaychecksPerYearValue(EmployeeCostBasis),
+            // };
         }
 
         /// <summary>
@@ -131,13 +142,15 @@ namespace Api.Services.PayrollSrv
         /// </summary>
         /// <param name="dependentCount"></param>
         /// <returns></returns>
-        private Deduction CalculateDependentBaseCost(int dependentCount)
+        private IDeduction CalculateDependentBaseCost(int dependentCount)
         {
-            return new Deduction
-            {
-                Name = "Dependent Base Cost",
-                Amount = ConvertToMonthlyToPaychecksPerYearValue(DependentAdditionalCost * dependentCount)
-            };
+            var amount = ConvertToMonthlyToPaychecksPerYearValue(DependentAdditionalCost * dependentCount);
+            return _deductionFactory.CreateDeduction("Dependent Base Cost", amount);
+            // return new Deduction
+            // {
+            //     Name = "Dependent Base Cost",
+            //     Amount = ConvertToMonthlyToPaychecksPerYearValue(DependentAdditionalCost * dependentCount)
+            // };
         }
 
         /// <summary>
@@ -146,13 +159,15 @@ namespace Api.Services.PayrollSrv
         /// </summary>
         /// <param name="salary"></param>
         /// <returns></returns>
-        private Deduction CalculateHigherSalaryEmployeeAdditionalCost(decimal salary)
+        private IDeduction CalculateHigherSalaryEmployeeAdditionalCost(decimal salary)
         {
-            return new Deduction
-            {
-                Name = "Higher Salary Employee Additional Cost",
-                Amount = (salary > HigherEmployeeMinSalary) ? Math.Round(salary * HigherEmployeeAdditionalPercentage / PaychecksPerYear, 2) : 0,
-            };
+            var amount = (salary > HigherEmployeeMinSalary) ? Math.Round(salary * HigherEmployeeAdditionalPercentage / PaychecksPerYear, 2) : 0;
+            return _deductionFactory.CreateDeduction("Higher Salary Employee Additional Cost", amount);
+            // return new Deduction
+            // {
+            //     Name = "Higher Salary Employee Additional Cost",
+            //     Amount = (salary > HigherEmployeeMinSalary) ? Math.Round(salary * HigherEmployeeAdditionalPercentage / PaychecksPerYear, 2) : 0,
+            // };
         }
 
         /// <summary>
@@ -163,15 +178,17 @@ namespace Api.Services.PayrollSrv
         /// </summary>
         /// <param name="dependents"></param>
         /// <returns></returns>
-        private Deduction CalculateHigherDependentAgeCost(ICollection<Dependent> dependents)
+        private IDeduction CalculateHigherDependentAgeCost(ICollection<Dependent> dependents)
         {
 
             var higherAgeDependents = dependents.Count(d => d.DateOfBirth.Age() >= HigherDependentAge);
-            return new Deduction
-            {
-                Name = "Higher Dependent Age Cost",
-                Amount = ConvertToMonthlyToPaychecksPerYearValue(higherAgeDependents * HigherDependentCost)
-            };
+            var amount = ConvertToMonthlyToPaychecksPerYearValue(higherAgeDependents * HigherDependentCost);
+            return _deductionFactory.CreateDeduction("Higher Dependent Age Cost", amount);
+            // return new Deduction
+            // {
+            //     Name = "Higher Dependent Age Cost",
+            //     Amount = ConvertToMonthlyToPaychecksPerYearValue(higherAgeDependents * HigherDependentCost)
+            // };
         }
 
     }

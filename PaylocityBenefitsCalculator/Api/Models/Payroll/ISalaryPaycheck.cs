@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.Models.Payroll
 {
-    public interface IDeductions
+    public interface ISalaryPaycheck : IPaycheckBase, IDeductions
     {
-        List<Deduction> Deductions { get; set; }
     }
 }
